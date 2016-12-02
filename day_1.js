@@ -2,6 +2,7 @@ import { compose, map, reduce, curry, prop } from 'ramda';
 
 import { readAsString } from './utils/file';
 import { mod } from './utils/math';
+import { log } from './utils/log';
 
 const Instruction = String;
 const Direction = String;
@@ -20,10 +21,10 @@ const extractInstructions = (s) => s.split(', ');
 const getInstructions = compose(map(extractInstructions), readAsString);
 
 // distanceBetweenPoints :: Point -> Point -> Number
-const distanceBetweenPoints = curry((p1, p2) => (p1.x - p2.x) + (p1.y - p2.y));
+const distanceBetweenPoints = curry((p1, p2) => Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y));
 
-// getNewDirection :: Direction -> RelativeDirection -> Direction
-const getNewDirection = (d, rd) => directions[mod(directions.indexOf(d) + (rd === 'R' ? 1 : -1), directions.length)];
+// getNextDirection :: Direction -> RelativeDirection -> Direction
+const getNextDirection = (d, rd) => directions[mod(directions.indexOf(d) + (rd === 'R' ? 1 : -1), directions.length)];
 
 // extractRelativeDirection :: Instruction -> RelativeDirection
 const extractRelativeDirection = (instruction) => instruction[0];
@@ -46,19 +47,21 @@ const createNewPoint = ({ x, y }, direction, distance) => {
 
 // getNextGridPoint :: GridPoint -> Instruction -> GridPoint
 const getNextGridPoint = (gridPoint, instruction) => {
-  const newDirection = getNewDirection(gridPoint.direction, extractRelativeDirection(instruction));
+  const newDirection = getNextDirection(gridPoint.direction, extractRelativeDirection(instruction));
   return { direction: newDirection, point: createNewPoint(gridPoint.point, newDirection, extractDistance(instruction)) };
 };
 
 // getFinalGridPoint :: GridPoint -> [Instruction] -> GridPoint
 const getFinalGridPoint = reduce(getNextGridPoint);
 
-// runExercise1 = String -> Task Error Number
-const runExercise1 = (startPoint) => compose(distanceBetweenPoints(startPoint.point), prop('point'), getFinalGridPoint(startPoint));
+// getDistanceFromOrigo :: Point -> Number
+const getDistanceFromOrigo = distanceBetweenPoints({x: 0, y:0});
+
+// getDistanceToEasterBunnyHQ = GridPoint -> [Instruction] -> Number
+const getDistanceToEasterBunnyHQ = compose(getDistanceFromOrigo, prop('point'), getFinalGridPoint);
 
 getInstructions('input/day_1.txt').fork(console.error, (instructions) => {
-  // instructions.forEach((instruction) => console.log(`'${instruction}'`));
   const startPoint = { direction: 'N', point: { x: 0, y: 0 } };
-  const distance = runExercise1(startPoint)(instructions);
+  const distance = getDistanceToEasterBunnyHQ(startPoint, instructions);
   console.log('Distance to Easter Bunny HQ:', Math.abs(distance));
 });
