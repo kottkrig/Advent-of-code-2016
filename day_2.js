@@ -11,7 +11,7 @@ const FilePath = String;
 const keypad = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
 
 // getSteps :: String -> [Step]
-const getSteps = (instructionsString) => instructionsString.split("");
+const getSteps = split("");
 
 // getInstructions :: String -> [[Step]]
 const getInstructions = compose(map(getSteps), split("\n"));
