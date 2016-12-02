@@ -37,20 +37,14 @@ const getNextCoordinate = ({ x, y }, instruction) => {
 // getNextCoordinateForSteps :: Point -> [Step] -> Point
 const getNextCoordinateForSteps = reduce(getNextCoordinate);
 
-// getNextCoordinateInstructionsString :: Point -> String -> Point
-const getNextCoordinateInstructionsString = (startPoint, instructionString) => compose(getNextCoordinateForSteps(startPoint), getSteps)(instructionString);
-
-// getNextCodeDigit :: Point -> [Step] -> Number
-const getNextCodeDigit = compose(getCodeDigit, log("nextCoordinate"), getNextCoordinateForSteps);
-
 // getLastCoordinateForSteps :: Point -> [[Step]] -> [Point]
 const getLastCoordinateForSteps = (startPoint, instructions) => map(getNextCoordinateForSteps(startPoint))(instructions);
 
-// parseInstructions :: FilePath -> Task Error [[Step]]
-const parseInstructions = compose(map(getInstructions), readAsString);
-
 // getCode :: Point -> [[Step]] -> String
 const getCode = compose(join(""), map(getCodeDigit), getLastCoordinateForSteps);
+
+// parseInstructions :: FilePath -> Task Error [[Step]]
+const parseInstructions = compose(map(getInstructions), readAsString);
 
 parseInstructions("input/day_2.txt").fork(console.error, (instructions) => {
   const startPoint = { x: 1, y: 1 };
