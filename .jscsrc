@@ -1,0 +1,10 @@
+{
+  "preset": "airbnb",
+  "requireSpaceBeforeObjectValues": true,
+  "validateQuoteMarks": { "mark": "\"", "escape": true },
+  "requireObjectDestructuring": true,
+  "requireArrowFunctions": true,
+  "requireShorthandArrowFunctions": false,
+  "excludeFiles": ["Gruntfile.js"],
+  "maximumLineLength": 200
+}
