@@ -1,4 +1,4 @@
-import { compose, map, reduce, curry, prop, split, join } from "ramda";
+import { compose, map, reduce, curry, prop, split, join, mapAccum } from "ramda";
 
 import { readAsString } from "./utils/file";
 import { mod } from "./utils/math";
@@ -44,7 +44,7 @@ const getNextCoordinateInstructionsString = (startPoint, instructionString) => c
 const getNextCodeDigit = compose(getCodeNumber, log("nextCoordinate"), getNextCoordinateForSteps);
 
 // getLastCoordinateForSteps :: Point -> [[Step]] -> [Point]
-const getLastCoordinateForSteps = (startPoint, instructions) => instructions.map((steps) => getNextCoordinateForSteps(startPoint, steps));
+const getLastCoordinateForSteps = (startPoint, instructions) => map(getNextCoordinateForSteps(startPoint))(instructions);
 
 // parseInstructions :: FilePath -> Task Error [[Step]]
 const parseInstructions = compose(map(getInstructions), readAsString);
