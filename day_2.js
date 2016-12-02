@@ -1,4 +1,4 @@
-import { compose, map, reduce, curry, prop, split } from "ramda";
+import { compose, map, reduce, curry, prop, split, join } from "ramda";
 
 import { readAsString } from "./utils/file";
 import { mod } from "./utils/math";
@@ -35,20 +35,23 @@ const getNextCoordinate = ({ x, y }, instruction) => {
 };
 
 // getNextCoordinateForSteps :: Point -> [Step] -> Point
-const getNextCoordinateForSteps = (startPoint, instructionString) => compose(reduce(getNextCoordinate, startPoint), getSteps)(instructionString);
+const getNextCoordinateForSteps = reduce(getNextCoordinate);
 
-// getNextCodeNumber :: Point -> [Step] -> Number
-const getNextCodeNumber = compose(getCodeNumber, log("nextCoordinate"), getNextCoordinateForSteps);
+// getNextCoordinateInstructionsString :: Point -> String -> Point
+const getNextCoordinateInstructionsString = (startPoint, instructionString) => compose(getNextCoordinateForSteps(startPoint), getSteps)(instructionString);
 
-// getLastCoordinateForSteps :: Point -> [[Steps]] -> [Point]
-const getLastCoordinateForSteps = compose(reduce(), reduce(getNextCoordinateForSteps));
+// getNextCodeDigit :: Point -> [Step] -> Number
+const getNextCodeDigit = compose(getCodeNumber, log("nextCoordinate"), getNextCoordinateForSteps);
 
+// getLastCoordinateForSteps :: Point -> [[Step]] -> [Point]
+const getLastCoordinateForSteps = (startPoint, instructions) => instructions.map((steps) => getNextCoordinateForSteps(startPoint, steps));
 
 // parseInstructions :: FilePath -> Task Error [[Step]]
 const parseInstructions = compose(map(getInstructions), readAsString);
 
-parseInstructions("input/day_2.txt").fork(console.error, (instructions) => {
-  console.log("instructions", instructions);
-});
+// getCode :: Point -> [[Step]] -> String
+const getCode = compose(join(""), map(getCodeNumber), getLastCoordinateForSteps);
 
-// console.log("nextNumber:", getNextCodeNumber({ x: 2, y: 2 }, "LURDL"));
+parseInstructions("input/day_2.txt").fork(console.error, (instructions) => {
+  console.log("The bathroom code is:", getCode({ x: 2, y: 2 }, instructions));
+});
