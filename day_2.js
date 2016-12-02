@@ -16,8 +16,8 @@ const getSteps = (instructionsString) => instructionsString.split("");
 // getInstructions :: String -> [[Step]]
 const getInstructions = compose(map(getSteps), split("\n"));
 
-// getCodeNumber :: Point -> Number
-const getCodeNumber = ({ x, y }) => keypad[y][x];
+// getCodeDigit :: Point -> Number
+const getCodeDigit = ({ x, y }) => keypad[y][x];
 
 // getNextCoordinate :: Point -> Step -> Point
 const getNextCoordinate = ({ x, y }, instruction) => {
@@ -41,7 +41,7 @@ const getNextCoordinateForSteps = reduce(getNextCoordinate);
 const getNextCoordinateInstructionsString = (startPoint, instructionString) => compose(getNextCoordinateForSteps(startPoint), getSteps)(instructionString);
 
 // getNextCodeDigit :: Point -> [Step] -> Number
-const getNextCodeDigit = compose(getCodeNumber, log("nextCoordinate"), getNextCoordinateForSteps);
+const getNextCodeDigit = compose(getCodeDigit, log("nextCoordinate"), getNextCoordinateForSteps);
 
 // getLastCoordinateForSteps :: Point -> [[Step]] -> [Point]
 const getLastCoordinateForSteps = (startPoint, instructions) => map(getNextCoordinateForSteps(startPoint))(instructions);
@@ -50,8 +50,9 @@ const getLastCoordinateForSteps = (startPoint, instructions) => map(getNextCoord
 const parseInstructions = compose(map(getInstructions), readAsString);
 
 // getCode :: Point -> [[Step]] -> String
-const getCode = compose(join(""), map(getCodeNumber), getLastCoordinateForSteps);
+const getCode = compose(join(""), map(getCodeDigit), getLastCoordinateForSteps);
 
 parseInstructions("input/day_2.txt").fork(console.error, (instructions) => {
-  console.log("The bathroom code is:", getCode({ x: 2, y: 2 }, instructions));
+  const startPoint = { x: 1, y: 1 };
+  console.log("The bathroom code is:", getCode(startPoint, instructions));
 });
