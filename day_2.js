@@ -37,6 +37,8 @@ const getNextCoordinate = ({ x, y }, instruction) => {
 // getNextCoordinateForSteps :: Point -> [Step] -> Point
 const getNextCoordinateForSteps = reduce(getNextCoordinate);
 
+// TODO: Make sure that every iteration of map uses the previous last point as the startpoint
+
 // getLastCoordinateForSteps :: Point -> [[Step]] -> [Point]
 const getLastCoordinateForSteps = (startPoint, instructions) => map(getNextCoordinateForSteps(startPoint))(instructions);
 
