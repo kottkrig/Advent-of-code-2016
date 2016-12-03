@@ -11,7 +11,6 @@ import {
 } from "ramda";
 
 import { readAsString } from "./utils/file";
-import { mod } from "./utils/math";
 import { log } from "./utils/log";
 
 const FilePath = String;
