@@ -66,7 +66,6 @@ const decryptName = (name, sectorId) => compose(join(""), map(flip(rotateChar)(s
 const decryptRow = (row) => {
   const sectorId = extractSectorId(row);
   const name = extractEncryptedName(row);
-  // console.log(name, sectorId, decryptName(name, sectorId));
   return { name: decryptName(name, sectorId), sectorId };
 };
 
