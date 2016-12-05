@@ -54,7 +54,10 @@ const getMd5ForIndex = compose(md5, concat("abc"));
 const isValidIndex = compose(hasLeadingZeroes, getMd5ForIndex);
 
 // getNextPasswordChar :: Number -> Char
-const getNextPasswordChar = compose(getPasswordChar, getMd5ForIndex, until(isValidIndex, inc));
+const getNextPasswordChar = compose(getPasswordChar, getMd5ForIndex, getNextValidIndex);
+
+// getNextValidIndex :: Number -> Number
+const getNextValidIndex = until(isValidIndex, inc);
 
 console.log(getNextPasswordChar(0));
 // console.log(concat("abc")(123));
