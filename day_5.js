@@ -29,6 +29,7 @@ import {
   split,
   splitAt,
   sum,
+  take,
   toLower,
   toPairs,
   unnest,
@@ -42,7 +43,7 @@ import { log } from "./utils/log";
 const FilePath = String;
 
 // hasLeadingZeroes :: String -> Boolean
-const hasLeadingZeroes = compose(equals("00000"), prop(0), splitAt(5));
+const hasLeadingZeroes = compose(equals("00000"), take(5));
 
 // getPasswordChar :: String -> Char
 const getPasswordChar = nth(5);
@@ -54,10 +55,7 @@ const getMd5ForIndex = compose(md5, concat("abc"));
 const isValidIndex = compose(hasLeadingZeroes, getMd5ForIndex);
 
 // getNextPasswordChar :: Number -> Char
-const getNextPasswordChar = compose(getPasswordChar, getMd5ForIndex, getNextValidIndex);
-
-// getNextValidIndex :: Number -> Number
-const getNextValidIndex = until(isValidIndex, inc);
+const getNextPasswordChar = compose(getPasswordChar, getMd5ForIndex, until(isValidIndex, inc));
 
 console.log(getNextPasswordChar(0));
 // console.log(concat("abc")(123));
