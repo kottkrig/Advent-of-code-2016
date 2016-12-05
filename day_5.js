@@ -44,13 +44,17 @@ const FilePath = String;
 // hasLeadingZeroes :: String -> Boolean
 const hasLeadingZeroes = compose(equals("00000"), prop(0), splitAt(5));
 
+// getPasswordChar :: String -> Char
 const getPasswordChar = nth(5);
 
+// getMd5ForIndex :: Number -> String
 const getMd5ForIndex = compose(md5, concat("abc"));
 
-const isValidPasswordChar = compose(hasLeadingZeroes, getMd5ForIndex);
+// isValidIndex :: Number -> Boolean
+const isValidIndex = compose(hasLeadingZeroes, getMd5ForIndex);
 
-const getNextPasswordChar = compose(getPasswordChar, getMd5ForIndex, until(isValidPasswordChar, inc));
+// getNextPasswordChar :: Number -> Char
+const getNextPasswordChar = compose(getPasswordChar, getMd5ForIndex, until(isValidIndex, inc));
 
 console.log(getNextPasswordChar(0));
 // console.log(concat("abc")(123));
