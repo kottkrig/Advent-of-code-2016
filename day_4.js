@@ -59,10 +59,13 @@ const sortByOccurances = (a, b) => {
 // rotateLetter :: Char -> Char
 const rotateLetter = curry((letter, rotations) => compose(nth(__, alphabet), modulo(__, alphabet.length), add(rotations), indexOf(__, alphabet))(letter));
 
+// rotateChar :: Char -> Char
 const rotateChar = (char, rotations) => ifElse(equals("-"), () => " ", rotateLetter(__, rotations))(char);
 
+// decryptName :: String -> String
 const decryptName = (name, sectorId) => compose(join(""), map(rotateChar(__, sectorId)))(name);
 
+// decryptRow :: String -> DecryptedRow
 const decryptRow = (row) => {
   const sectorId = extractSectorId(row);
   const name = extractEncryptedName(row);
