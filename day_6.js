@@ -42,8 +42,6 @@ import {
   unnest,
 } from "ramda";
 
-import md5 from "blueimp-md5";
-
 import { readAsString } from "./utils/file";
 import { log } from "./utils/log";
 
