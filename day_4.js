@@ -1,4 +1,5 @@
 import {
+  __,
   add,
   countBy,
   compose,
@@ -6,7 +7,6 @@ import {
   equals,
   filter,
   find,
-  flip,
   gt,
   ifElse,
   indexOf,
@@ -57,11 +57,11 @@ const sortByOccurances = (a, b) => {
 };
 
 // rotateLetter :: Char -> Char
-const rotateLetter = (letter, rotations) => compose(flip(nth)(alphabet), flip(modulo)(alphabet.length), add(rotations), flip(indexOf)(alphabet))(letter);
+const rotateLetter = curry((letter, rotations) => compose(nth(__, alphabet), modulo(__, alphabet.length), add(rotations), indexOf(__, alphabet))(letter));
 
-const rotateChar = (char, rotations) => ifElse(equals("-"), () => " ", flip(rotateLetter)(rotations))(char);
+const rotateChar = (char, rotations) => ifElse(equals("-"), () => " ", rotateLetter(__, rotations))(char);
 
-const decryptName = (name, sectorId) => compose(join(""), map(flip(rotateChar)(sectorId)))(name);
+const decryptName = (name, sectorId) => compose(join(""), map(rotateChar(__, sectorId)))(name);
 
 const decryptRow = (row) => {
   const sectorId = extractSectorId(row);
@@ -94,7 +94,7 @@ const decryptRealSectorNamesFromString = compose(map(decryptRow), filter(isRowRe
 const decryptRealSectorNamesFromFile = compose(map(decryptRealSectorNamesFromString), readAsString);
 
 // stringIncludesSubString :: String -> String -> Boolean
-const stringIncludesSubString = curry((substring, string) => compose(flip(gt)(-1), indexOf)(substring, string));
+const stringIncludesSubString = curry((substring, string) => compose(gt(__, -1), indexOf)(substring, string));
 
 // String -> Boolean
 const nameIncludesNorth = compose(stringIncludesSubString("north"), prop("name"));
