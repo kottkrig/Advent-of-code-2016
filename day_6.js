@@ -1,45 +1,16 @@
 import {
-  __,
-  add,
-  append,
   countBy,
   compose,
-  concat,
-  curry,
-  equals,
-  filter,
-  find,
-  flip,
-  gt,
   head,
-  ifElse,
-  inc,
-  indexOf,
   join,
   last,
-  length,
   map,
-  match,
-  modulo,
-  nth,
-  prepend,
   prop,
-  replace,
-  reverse,
-  until,
-  scan,
-  slice,
-  sort,
   sortBy,
   split,
-  splitAt,
-  sum,
-  tail,
-  take,
   transpose,
   toLower,
   toPairs,
-  unnest,
 } from "ramda";
 
 import { readAsString } from "./utils/file";
@@ -60,16 +31,13 @@ const getMostFrequentLetter = compose(getKeyWithHighestValue, countBy(toLower));
 const getLeastFrequentLetter = compose(getKeyWithLowestValue, countBy(toLower));
 
 // unscrambleMessage :: String -> String
-const unscrambleMessage = compose(join(""), map(getMostFrequentLetter), transpose, map(split("")), split("\n"));
-
-// unscrambleOriginalMessage :: String -> String
-const unscrambleOriginalMessage = compose(join(""), map(getLeastFrequentLetter), transpose, map(split("")), split("\n"));
+const unscrambleMessage = (unscrambleFunc) => compose(join(""), map(unscrambleFunc), transpose, map(split("")), split("\n"));
 
 // unscrambleMessageFromFile :: FilePath -> Task Error String
-const unscrambleMessageFromFile = compose(map(unscrambleMessage), readAsString);
+const unscrambleMessageFromFile = compose(map(unscrambleMessage(getMostFrequentLetter)), readAsString);
 
 // unscrambleOriginalMessageFromFile :: FilePath -> Task Error String
-const unscrambleOriginalMessageFromFile = compose(map(unscrambleOriginalMessage), readAsString);
+const unscrambleOriginalMessageFromFile = compose(map(unscrambleMessage(getLeastFrequentLetter)), readAsString);
 
 unscrambleMessageFromFile("input/day_6.txt").fork(console.error, (message) => {
   console.log(`The message is: '${message}'`);
