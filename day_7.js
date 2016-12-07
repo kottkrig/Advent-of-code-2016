@@ -60,14 +60,14 @@ const hyperNetSequenceDoesNotContainAbba = complement(hyperNetSequenceContainsAb
 // ipContainsAbba :: Ip7Address -> Boolean
 const ipContainsAbba = compose(isAnyTrue, map(containsAbba), extractIp);
 
-// isValidAdress :: Ip7Address -> Boolean
-const isValidAdress = both(hyperNetSequenceDoesNotContainAbba, ipContainsAbba);
+// isValidAddress :: Ip7Address -> Boolean
+const isValidAddress = both(hyperNetSequenceDoesNotContainAbba, ipContainsAbba);
 
 // extractAddresses :: String -> [Ip7Address]
 const extractAddresses = split("\n");
 
 // getNumberOfIPSWithTLS :: [Ip7Address] -> Number
-const getNumberOfIPSWithTLS = compose(length, filter(isValidAdress));
+const getNumberOfIPSWithTLS = compose(length, filter(isValidAddress));
 
 // getNumberOfIPSWithTLSInFile :: FilePath -> Task Error Number
 const getNumberOfIPSWithTLSInFile = compose(map(getNumberOfIPSWithTLS), map(extractAddresses), readAsString);
