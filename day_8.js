@@ -27,6 +27,7 @@ import {
   update,
   reduce,
   repeat,
+  replace,
   reverse,
   slice,
   sortBy,
@@ -64,7 +65,7 @@ const rotateColumn = curry((index, length, display) => compose(transpose, rotate
 const drawRect = curry((width, height, display) => concat(compose(map(insertAll(0, repeat(1, width))), map(drop(width)), slice(0, height))(display), slice(height, display.length, display)));
 
 // displayToString :: Display -> String
-const displayToString = compose(join("\n"), map(join("")));
+const displayToString = compose(replace(/0/g, " "), replace(/1/g, "*"), join("\n"), map(join("")));
 
 const executeInstruction = curry((display, instructionString) => {
   if (contains("rect", instructionString)) {
@@ -100,6 +101,10 @@ const countLitPixelsOnDisplayAfterInstructions = curry((display, instructions) =
 const countLitPixelsOnDisplayAfterInstructionsInFile = compose(map(log("string")), readAsString);
 
 readAsString("input/day_8.txt").fork(console.error, (input) => {
-  const pixelCount = countLitPixelsOnDisplayAfterInstructions(createDisplay(50, 6), input);
+  const emptyDisplay = createDisplay(50, 6);
+  const pixelCount = countLitPixelsOnDisplayAfterInstructions(emptyDisplay, input);
   console.log("Number of lit pixels", pixelCount);
+
+  console.log("");
+  console.log(displayToString(executeInstructionsOnDisplay(emptyDisplay, extractInstructions(input))));
 });
