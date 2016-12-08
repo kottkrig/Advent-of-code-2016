@@ -63,19 +63,22 @@ const rotateColumn = curry((index, length, display) => compose(transpose, rotate
 // drawRect :: Number -> Number -> Display -> Display
 const drawRect = curry((width, height, display) => concat(compose(map(insertAll(0, repeat(1, width))), map(drop(width)), slice(0, height))(display), slice(height, display.length, display)));
 
+// displayToString :: Display -> String
+const displayToString = compose(join("\n"), map(join("")));
+
 const executeInstruction = curry((display, instructionString) => {
   if (contains("rect", instructionString)) {
-    let [width, height] = map(parseInt)(match(/\d/g, instructionString));
+    let [width, height] = map(parseInt)(match(/\d{1,2}/g, instructionString));
     return drawRect(width, height, display);
   }
 
   if (contains("rotate column", instructionString)) {
-    let [index, length] = map(parseInt)(match(/\d/g, instructionString));
+    let [index, length] = map(parseInt)(match(/\d{1,2}/g, instructionString));
     return rotateColumn(index, length, display);
   }
 
   if (contains("rotate row", instructionString)) {
-    let [index, length] = map(parseInt)(match(/\d/g, instructionString));
+    let [index, length] = map(parseInt)(match(/\d{1,2}/g, instructionString));
     return rotateRow(index, length, display);
   }
 
