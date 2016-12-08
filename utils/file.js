@@ -1,6 +1,6 @@
 import fs from "fs";
 import Task from "data.task";
-import { compose } from "ramda";
+import { compose, split } from "ramda";
 
 // read :: String -> Task Error Buffer
 const read = (path) => new Task((reject, resolve) => {
@@ -15,6 +15,8 @@ const decode = (buffer) => buffer.map(a => a.toString("utf-8"));
 
 // readFileAsString :: String -> Task Error String
 const readAsString = compose(decode, read);
+
+const readAsRows = compose(split("\n"), readAsString);
 
 module.exports = {
   read,
