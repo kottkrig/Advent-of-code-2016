@@ -12,6 +12,7 @@ import {
   contains,
   curry,
   drop,
+  either,
   equals,
   filter,
   gte,
@@ -64,14 +65,20 @@ const lengthGreaterThan = curry((l, s) => compose(lte(l), length, split(""))(s))
 // generateData :: Number -> String -> String
 const generateData = (dataLength, initialData) => compose(take(dataLength), until(lengthGreaterThan(dataLength), appendGeneratedData))(initialData);
 
-const generateChecksumForPair = ifElse(or(equals("11"), equals("00")), always("1"), always("0"));
+// generateChecksumForPair :: String -> String
+const generateChecksumForPair = ifElse(either(equals("11"), equals("00")), always("1"), always("0"));
 
-const lengthIsOdd = compose(equals(0), modulo(__, 2), length);
+// lengthIsOdd :: String -> Boolean
+const lengthIsOdd = compose(equals(1), modulo(__, 2), length);
 
-const generateChecksum = until(lengthIsOdd, compose(join(""), map(generateChecksumForPair), log("splitEvery"), splitEvery(2)));
+// runChecksumPass :: String -> String
+const runChecksumPass = compose(join(""), map(generateChecksumForPair), splitEvery(2));
 
-console.log(appendGeneratedData("111100001010") === "1111000010100101011110000");
-console.log("lengthGreaterThan:", lengthGreaterThan(10, "1111"));
-console.log("generateData:", generateData(10, "1111"));
-console.log("lengthIsOdd:", lengthIsOdd("111"));
-console.log("generateChecksum:", generateChecksum("110010110100"));
+// generateChecksum :: String -> String
+const generateChecksum = until(lengthIsOdd, runChecksumPass);
+
+// generateData :: Number -> String -> String
+const getChecksumForGeneratedData = compose(generateChecksum, generateData);
+
+console.log("getChecksumForGeneratedData:", getChecksumForGeneratedData(20, "10000"));
+console.log("getChecksumForGeneratedData:", getChecksumForGeneratedData(272, "11110010111001001"));
