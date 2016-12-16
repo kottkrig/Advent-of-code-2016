@@ -80,4 +80,5 @@ const generateChecksum = until(lengthIsOdd, runChecksumPass);
 // generateData :: Number -> String -> String
 const getChecksumForGeneratedData = compose(generateChecksum, generateData);
 
-console.log("Checksum for data:", getChecksumForGeneratedData(272, "11110010111001001"));
+console.log("Checksum for disk A data:", getChecksumForGeneratedData(272, "11110010111001001"));
+console.log("Checksum for disk B data:", getChecksumForGeneratedData(35651584, "11110010111001001"));
