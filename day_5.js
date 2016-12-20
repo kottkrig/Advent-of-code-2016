@@ -68,14 +68,18 @@ const getNextPasswordChar = compose(getPasswordChar, getMd5ForIndex, getNextVali
 
 const hasLength8 = compose(gt(__, 7), length);
 
-var index = 0;
-var array = [];
-while (array.length < 8) {
-  const nextValidIndex = getNextValidIndex(index);
-  array.push(nextValidIndex);
-  index = nextValidIndex + 1;
-}
+const getCode = () => {
+  var index = 0;
+  var array = [];
+  while (array.length < 8) {
+    const nextValidIndex = getNextValidIndex(index);
+    array.push(nextValidIndex);
+    index = nextValidIndex + 1;
+  }
 
-const code = array.map(getPasswordCharFromIndex);
+  const code = array.map(getPasswordCharFromIndex);
 
-console.log("The code to the first door is:", code.join(""));
+  return code.join("");
+};
+
+console.log("The code to the first door is:", getCode());
